@@ -562,9 +562,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			PHI = PHI2;
 			ui.labelPHI->setText(QString::number(PHI2));
 			ui.labelPHI->show();
+
 			//ui.lineEditPHI->setText(QVariant(PHI).toString());
 			//cout << "\nPHI:" << PHI2;
-
 			//ui.lineEditPHI->setText(QString::number(PHI2));
 			//cambiarSliderPHI_ValProm();
 
