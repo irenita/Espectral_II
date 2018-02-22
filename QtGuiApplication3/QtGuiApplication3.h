@@ -25,16 +25,19 @@ public slots:   //private
 	void cambiarLabelTITA(int);
 	void cambiarLabelPHI(int);
 	void cambiarSliderTITA();
-	void cambiarSliderTITA_ValProm();
+	//void cambiarSliderTITA_ValProm();
 	void cambiarSliderPHI();
-	void cambiarSliderPHI_ValProm();
+	//void cambiarSliderPHI_ValProm();
 	void mensajeSalir();
 	void botonGuardarImagen();
 	void transformacionBGRtoQpixMap();	//QString
 	void cvMat2QPixmap(Mat matrizImagen);	//, int matFilas, int matColumnas
+	void mostrarOriginal();
+	void ocultarOriginal();
 	void direccionEntrada(QString);
 	void selecValProm();
 	void selecValInd();
+	void reestValores();
 	//void selecTITAprom();
 	//void selecPHIprom();
 	void algoritmoParteUno();
@@ -50,7 +53,9 @@ public slots:   //private
 //void ImagenCargada::setDireccionEntrada(QString direccion)   //char* direccion
 
 static struct ImagenCargada {
+
 	string nombreArchivo;
+	
 	bool valPromTITA = false;	//true
 	bool valIndTITA = false;
 	bool valPromPHI = false;		//true
@@ -58,7 +63,12 @@ static struct ImagenCargada {
 	bool valManualTITA = false;
 	bool valManualPHI = false;
 
+	bool ejecutaAlgoritmo = false; // Si queremos llamar a unas funciones sin ejecutar Algoritmo de decoloración
+	bool cargandoImagen = false;
+
+	QString fileName;
 	Mat imagen; //ImagenOriginal que se lee del archivo
+	Mat imagenResized;
 	Mat magnitudBlue;
 	Mat magnitudGreen;
 	Mat magnitudRed;

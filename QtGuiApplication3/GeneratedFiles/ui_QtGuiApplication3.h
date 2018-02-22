@@ -47,6 +47,8 @@ public:
     QLabel *label_6;
     QLabel *labelTITA;
     QLabel *labelPHI;
+    QLabel *label_pic_color;
+    QPushButton *pushButtonImagenOriginal;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
     QMenuBar *menuBar;
@@ -55,7 +57,7 @@ public:
     {
         if (QtGuiApplication3Class->objectName().isEmpty())
             QtGuiApplication3Class->setObjectName(QStringLiteral("QtGuiApplication3Class"));
-        QtGuiApplication3Class->resize(756, 537);
+        QtGuiApplication3Class->resize(752, 573);
         QPalette palette;
         QBrush brush(QColor(100, 100, 100, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -115,7 +117,7 @@ public:
         centralWidget->setPalette(palette1);
         pushButtonSalir = new QPushButton(centralWidget);
         pushButtonSalir->setObjectName(QStringLiteral("pushButtonSalir"));
-        pushButtonSalir->setGeometry(QRect(660, 450, 75, 23));
+        pushButtonSalir->setGeometry(QRect(660, 490, 75, 23));
         QFont font;
         font.setBold(true);
         font.setWeight(75);
@@ -340,6 +342,30 @@ public:
         palette12.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
         labelPHI->setPalette(palette12);
         labelPHI->setLayoutDirection(Qt::RightToLeft);
+        label_pic_color = new QLabel(centralWidget);
+        label_pic_color->setObjectName(QStringLiteral("label_pic_color"));
+        label_pic_color->setGeometry(QRect(10, 10, 501, 461));
+        sizePolicy.setHeightForWidth(label_pic_color->sizePolicy().hasHeightForWidth());
+        label_pic_color->setSizePolicy(sizePolicy);
+        label_pic_color->setFrameShape(QFrame::Box);
+        pushButtonImagenOriginal = new QPushButton(centralWidget);
+        pushButtonImagenOriginal->setObjectName(QStringLiteral("pushButtonImagenOriginal"));
+        pushButtonImagenOriginal->setGeometry(QRect(530, 450, 211, 23));
+        QPalette palette13;
+        palette13.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette13.setBrush(QPalette::Active, QPalette::Button, brush1);
+        palette13.setBrush(QPalette::Active, QPalette::Text, brush7);
+        palette13.setBrush(QPalette::Active, QPalette::ButtonText, brush2);
+        palette13.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette13.setBrush(QPalette::Inactive, QPalette::Button, brush1);
+        palette13.setBrush(QPalette::Inactive, QPalette::Text, brush7);
+        palette13.setBrush(QPalette::Inactive, QPalette::ButtonText, brush2);
+        palette13.setBrush(QPalette::Disabled, QPalette::WindowText, brush6);
+        palette13.setBrush(QPalette::Disabled, QPalette::Button, brush1);
+        palette13.setBrush(QPalette::Disabled, QPalette::Text, brush6);
+        palette13.setBrush(QPalette::Disabled, QPalette::ButtonText, brush6);
+        pushButtonImagenOriginal->setPalette(palette13);
+        pushButtonImagenOriginal->setFont(font);
         QtGuiApplication3Class->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(QtGuiApplication3Class);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -349,20 +375,20 @@ public:
         QtGuiApplication3Class->setStatusBar(statusBar);
         menuBar = new QMenuBar(QtGuiApplication3Class);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 756, 21));
-        QPalette palette13;
+        menuBar->setGeometry(QRect(0, 0, 752, 21));
+        QPalette palette14;
         QBrush brush22(QColor(194, 194, 194, 255));
         brush22.setStyle(Qt::SolidPattern);
-        palette13.setBrush(QPalette::Active, QPalette::Midlight, brush22);
-        palette13.setBrush(QPalette::Active, QPalette::Base, brush1);
-        palette13.setBrush(QPalette::Active, QPalette::Window, brush8);
-        palette13.setBrush(QPalette::Inactive, QPalette::Midlight, brush22);
-        palette13.setBrush(QPalette::Inactive, QPalette::Base, brush1);
-        palette13.setBrush(QPalette::Inactive, QPalette::Window, brush8);
-        palette13.setBrush(QPalette::Disabled, QPalette::Midlight, brush22);
-        palette13.setBrush(QPalette::Disabled, QPalette::Base, brush8);
-        palette13.setBrush(QPalette::Disabled, QPalette::Window, brush8);
-        menuBar->setPalette(palette13);
+        palette14.setBrush(QPalette::Active, QPalette::Midlight, brush22);
+        palette14.setBrush(QPalette::Active, QPalette::Base, brush1);
+        palette14.setBrush(QPalette::Active, QPalette::Window, brush8);
+        palette14.setBrush(QPalette::Inactive, QPalette::Midlight, brush22);
+        palette14.setBrush(QPalette::Inactive, QPalette::Base, brush1);
+        palette14.setBrush(QPalette::Inactive, QPalette::Window, brush8);
+        palette14.setBrush(QPalette::Disabled, QPalette::Midlight, brush22);
+        palette14.setBrush(QPalette::Disabled, QPalette::Base, brush8);
+        palette14.setBrush(QPalette::Disabled, QPalette::Window, brush8);
+        menuBar->setPalette(palette14);
         QtGuiApplication3Class->setMenuBar(menuBar);
 
         retranslateUi(QtGuiApplication3Class);
@@ -388,6 +414,8 @@ public:
         label_6->setText(QApplication::translate("QtGuiApplication3Class", "Valores manuales:", nullptr));
         labelTITA->setText(QString());
         labelPHI->setText(QString());
+        label_pic_color->setText(QString());
+        pushButtonImagenOriginal->setText(QApplication::translate("QtGuiApplication3Class", "Mostrar imagen original", nullptr));
     } // retranslateUi
 
 };
