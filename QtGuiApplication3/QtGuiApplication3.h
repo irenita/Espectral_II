@@ -34,6 +34,7 @@ public slots:   //private
 	void cvMat2QPixmap(Mat matrizImagen);	//, int matFilas, int matColumnas
 	void mostrarOriginal();
 	void ocultarOriginal();
+	void resizeImagen();
 	void direccionEntrada(QString);
 	void selecValProm();
 	void selecValInd();
@@ -64,7 +65,8 @@ static struct ImagenCargada {
 	bool valManualPHI = false;
 
 	bool ejecutaAlgoritmo = false; // Si queremos llamar a unas funciones sin ejecutar Algoritmo de decoloración
-	bool cargandoImagen = false;
+	bool cargandoImagen = false;	// Si es la primera vez que se carga la imagen y la queremos ver a color
+	bool guardandoImagen = false;	// Si presionamos el botón de GUARDAR se quiere la imagen FULL SIZE, sin resize
 
 	QString fileName;
 	Mat imagen; //ImagenOriginal que se lee del archivo
@@ -78,5 +80,6 @@ static struct ImagenCargada {
 	Mat complexLSplit[2];
 	Mat complexaSplit[2];
 	Mat complexbSplit[2];
+	Mat IMAGENFINAL;
 
 } imagenCargada;

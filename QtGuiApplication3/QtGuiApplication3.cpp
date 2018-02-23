@@ -78,16 +78,20 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			
 		else {
 
-			// Una variable que indica que no se debe de ejecutar el algoritmo
-			imagenCargada.ejecutaAlgoritmo = false;
 			// Una variable que indica que ya es una imagen recién cargada
 			imagenCargada.cargandoImagen = true;
-			// Y reestablecemos los varores
+			// Y reestablecemos los valores de las variables que pudieron cambiar durante el uso del programa
 			reestValores();
+			// Una variable que indica que no se debe de ejecutar el algoritmo de decoloración
+			imagenCargada.ejecutaAlgoritmo = true;
 
-			// Guardamos la direecion en formato QString static para posterior uso
+			// Guardamos la direecion en el formato de QString static para posterior uso
 			imagenCargada.fileName = fileName;
-			// Si hay archivo válido, se carga en el QPixmap y...
+
+			// Se carga la imagen escalada en la variable static cv::Mat imagenCargada.imagenResized
+			resizeImagen();
+
+			// Se carga en el QPixmap para mostrar la imagen a color recién seleccionada
 			QPixmap pix(fileName);
 			ui.label_pic->setPixmap(pix.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
 			ui.label_pic->repaint();
@@ -144,9 +148,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
-		if(imagenCargada.ejecutaAlgoritmo == true){
-		algoritmoParteUno();
-		algoritmoParteDos();
+		if(imagenCargada.ejecutaAlgoritmo == true){  // & imagenCargada.cargandoImagen == false
+			algoritmoParteUno();
+			algoritmoParteDos();
 		}
 	}
 
@@ -205,7 +209,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
-		if (imagenCargada.ejecutaAlgoritmo == true) {
+		if (imagenCargada.ejecutaAlgoritmo == true) { // & imagenCargada.cargandoImagen == false
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
@@ -294,18 +298,35 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//OpenFile.setLabelText(QFileDialog::Reject, tr("Cancell change"));
 		//dialogoGuardar.exec();
 
+		imagenCargada.guardandoImagen = true;
+
+		// Debemos de ejecutar el algoritmo de nuevo, para guardar la imagen en tamaño completo, el original
+		algoritmoParteUno();
+		algoritmoParteDos();
+		// GUARDAMOS EL RESULTADO Y LO MOSTRAMOS
+		/* 
+		imwrite("C:/Users/Irena/Pictures/Gray_Image2.jpg", imagenLabBGRtoRGB, vector<int>({ CV_IMWRITE_JPEG_QUALITY, 100 }));
+		QPixmap pix("C:/Users/Irena/Pictures/Gray_Image.jpg");
+		ui.label_pic->setPixmap(pix.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
+		ui.label_pic->repaint();
+		*/
+
 		QString selectedFilter;
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Guardar archivo"),
-			"imagen",
-			"*.png;;*.bmp;;*.jpg", &selectedFilter);
+			imagenCargada.fileName.left(imagenCargada.fileName.size()-4)+"_Decolorized",	//Le quitamos el .jpg o .png final
+			"*.jpg;;*.bmp;;*.png", &selectedFilter);
 
-		if (fileName.isEmpty())
+		if (fileName.isEmpty()){
+			imagenCargada.guardandoImagen = false;
 			return;
+		}
 		else {
 			//ui.label_pic->setText(fileName);
 			//Tomar la direccion y nombre de fileName y guardar la imagen con OpenCV
-			
+			imwrite(fileName.toUtf8().constData(), imagenCargada.IMAGENFINAL,
+				vector<int>({ CV_IMWRITE_JPEG_QUALITY, 100 , CV_IMWRITE_PNG_COMPRESSION, 0 }));
 
+			imagenCargada.guardandoImagen = false;
 		}
 	}
 
@@ -363,18 +384,22 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		
 		// Una variable que indica que no se debe de ejecutar el algoritmo
 		// que queremos que los valores se reinicien
-		// se ejecuta el algoritmo al final
+		// se ejecuta el algoritmo al final si no se está cargando la imagen
 		imagenCargada.ejecutaAlgoritmo = false;
 
+		// Se colorcan en 0 los labeles que indican el valor de TITA y PHI
 		cambiarLabelTITA(0);
 		cambiarLabelPHI(0);
 
-		bool valPromTITA = false;
-		bool valIndTITA = false;
-		bool valPromPHI = false;
-		bool valIndPHI = false;
-		bool valManualTITA = false;
-		bool valManualPHI = false;
+		// Indicamos que la imagen no se está guardando
+		imagenCargada.guardandoImagen = false;
+
+		imagenCargada.valPromTITA = false;
+		imagenCargada.valIndTITA = false;
+		imagenCargada.valPromPHI = false;
+		imagenCargada.valIndPHI = false;
+		imagenCargada.valManualTITA = true;
+		imagenCargada.valManualPHI = true;
 
 		ui.pushButtonValProm->setEnabled(true);
 		cambiarSliderTITA();
@@ -387,11 +412,12 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// y la queremos ver a color, sin ejecutar la decoloración
 		// no permitimos que se ejecuten los algoritmos de decoloración
 		if (imagenCargada.cargandoImagen == false){
+			imagenCargada.ejecutaAlgoritmo = true;
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
 	///cvMat2QPixmap(imagenCargada.imagen);
-
+		
 	}
 
 	// Cuando se desliza el slider de TITA o se cambia el box de TITA
@@ -445,7 +471,15 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//Mat imagen;										// new image - nueva imagen
 		///imagen = imread(entrada, IMREAD_COLOR);			// read the file - leer el archivo
 		//		imagen = imread(ImagenCargada::dirEntrada, IMREAD_COLOR);			// read the file - leer el archivo
-		imagenCargada.imagen = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
+		
+		// Si la imagen que queremos es la ORIGINAL TAMAÑO REAL:
+		if (imagenCargada.guardandoImagen == true) {
+			imagenCargada.imagen = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
+		}
+		else
+			// Si la imagen que queremos es la RESIZED:
+			imagenCargada.imagen = imagenCargada.imagenResized;
+		
 		//	imagen = imread(dirEntrada, IMREAD_COLOR);
 
 /*		if (!imagenCargada.imagen.data)								// Check for invalid input - chequea entrada invalida
@@ -780,6 +814,10 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 //		namedWindow("L FINAL PROCESO", CV_WINDOW_AUTOSIZE);
 //		imshow("L FINAL PROCESO", imagenLabBGR_final);
+
+		// Si estamos procesando la imagen ORIGINAL para guardarla:
+		if (imagenCargada.guardandoImagen == true)
+			imagenCargada.IMAGENFINAL = imagenLabBGR_final;
 
 		// Se transforma la Mat de BGR a RGB, se convierte a Qpixmap y se carga en el label:
 		cvMat2QPixmap(imagenLabBGR_final);
@@ -1153,8 +1191,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	// bool = true es que se va a desplegar un label diferente, a color
 	void QtGuiApplication3::cvMat2QPixmap(Mat matrizImagen) {
 	
-		int matFilas = imagenCargada.imagen.rows;
-		int matColumnas = imagenCargada.imagen.cols;
+		int matFilas = matrizImagen.rows;
+		int matColumnas = matrizImagen.cols;
+		
+		//int matFilas = imagenCargada.imagen.rows;
+		//int matColumnas = imagenCargada.imagen.cols;
 
 		// Transformar de BGR a RGB y a QPixmap
 		Mat imagenLabBGRtoRGB(matFilas, matColumnas, CV_32FC3);			// CV_32FC3   //CV_8UC3
@@ -1182,7 +1223,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	void QtGuiApplication3::mostrarOriginal() {
 
-		// Si la imagen no est[a en un QPixmap se debe de hacer una función como:
+		// Si la imagen no está en un QPixmap se debe de hacer una función como:
 		// cvMat2QPixmap(imagenCargada.imagen);
 		QPixmap pix2(imagenCargada.fileName);
 
@@ -1198,5 +1239,94 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	void QtGuiApplication3::ocultarOriginal() {
 	
 		ui.label_pic_color->hide();
+
+	}
+
+	// Para que el algoritmo fluya en tiempo real se disminuye la calidad de la imagen
+	// esta imagen NO es la que se almacena como resultado final al GUARDAR
+	void QtGuiApplication3::resizeImagen() {
+		
+	/*	Mat image = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
+		Mat dst(100, 100, CV_8U);
+		//dst.convertTo(imagenCargada.imagen, CV_8U);
+		cv::resize(image, dst, cv::Size(100, 100));
+		//cv::resize(image, imagenCargada.imagenResized, cv::Size(100, 100), 0, 0, INTER_LINEAR);
+		//imagenCargada.imagenResized = dst.clone();
+*/
+
+		//Mat imagenRESIZED = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
+		//Mat imagenRESIZED (ui.label_pic_color->width(), ui.label_pic_color->height(), CV_32F);
+		//cv::resize(imagenCargada.imagen, imagenRESIZED, imagenRESIZED.size(),0,0, INTER_LINEAR);
+
+		//imagenRESIZED.convertTo(imagenCargada.imagenResized, CV_32F);
+		//imagenRESIZED.copyTo(imagenCargada.imagenResized) ;
+
+
+		//imagenCargada.fileName;
+		//QPixmap pixResize(imagenCargada.fileName);
+		QImage pixResize(imagenCargada.fileName);
+
+		int al = ui.label_pic_color->width();
+		int an = ui.label_pic_color->height();
+		pixResize = pixResize.scaled(400, 400, Qt::KeepAspectRatio);
+		//pixResize.scaled(al, an, Qt::KeepAspectRatio);
+		
+		//ui.label_pic->setPixmap(pix); // KeepAspectRatio KeepAspectRatioByExpanding
+		//ui.label_pic->repaint();
+
+		// OJO, Qt lee en RGB y OpenCV en BGR --- Cambiar RGB a BGR
+		//imagenCargada.imagenResized = ;
+
+		pixResize = pixResize.convertToFormat(QImage::Format_RGB888);// .rgbSwapped();
+
+//		imagenCargada.imagenResized = Mat(pixResize.height(),
+//									pixResize.width(),
+//									CV_8UC(3), 
+//									pixResize.bits(), 
+//									pixResize.bytesPerLine()
+//									);
+
+		Mat view(pixResize.height(), pixResize.width(), CV_8UC3, (void *)pixResize.constBits(), pixResize.bytesPerLine());
+		cvtColor(view, imagenCargada.imagenResized, COLOR_RGB2BGR);
+//		QPixmap pixMapFinal(QPixmap::fromImage(QImage((uchar*)imagenLabBGRtoRGB.data,
+//			imagenLabBGRtoRGB.cols,
+//			imagenLabBGRtoRGB.rows,
+//			imagenLabBGRtoRGB.step,
+//			QImage::Format_RGB888)));   //QImage::Format_RGB888.rgbSwapped() 
+										// si le quito el rgbSwapped le coloco es imagenLabBGRtoRGB
+										//Qt::AspectRatioMode();
+
+	/*	//**********************************************
+
+		int matFilas = imagenCargada.imagenResized.rows;
+		int matColumnas = imagenCargada.imagenResized.cols;
+
+		//int matFilas = imagenCargada.imagen.rows;
+		//int matColumnas = imagenCargada.imagen.cols;
+
+		// Transformar de BGR a RGB y a QPixmap
+		Mat imagenLabBGRtoRGB(matFilas, matColumnas, CV_32FC3);			// CV_32FC3   //CV_8UC3
+		cvtColor(imagenCargada.imagenResized, imagenLabBGRtoRGB, CV_BGR2RGB);			// Conversion de BGR a RGB
+
+		int al = ui.label_pic->width();
+		int an = ui.label_pic->height();
+
+		//		cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2RGB);				// Conversion de CIELab a BGR
+		//		imagenLabBGR_final.convertTo(imagenLabBGR_final, CV_32FC3);			//imagenLabBGR_final = imagenLabBGR_final * 255;
+
+		//QImage() //(unsigned char*)
+		QPixmap pixMapFinal(QPixmap::fromImage(QImage((uchar*)imagenLabBGRtoRGB.data,
+			imagenLabBGRtoRGB.cols,
+			imagenLabBGRtoRGB.rows,
+			imagenLabBGRtoRGB.step,
+			QImage::Format_RGB888)));   //QImage::Format_RGB888.rgbSwapped() 
+										// si le quito el rgbSwapped le coloco es imagenLabBGRtoRGB
+										//Qt::AspectRatioMode();
+
+		ui.label_pic->setPixmap(pixMapFinal.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
+		ui.label_pic->repaint();
+		*/
+
+
 
 	}
