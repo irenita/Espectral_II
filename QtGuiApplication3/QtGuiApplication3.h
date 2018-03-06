@@ -27,14 +27,18 @@ public slots:   //private
 	void cambiarSliderTITA();
 	//void cambiarSliderTITA_ValProm();
 	void cambiarSliderPHI();
+	void cambiarSliderLuminancia();
+	void cambiarLabelLuminancia();
 	//void cambiarSliderPHI_ValProm();
 	void mensajeSalir();
 	void botonGuardarImagen();
-	void transformacionBGRtoQpixMap();	//QString
+	//void transformacionBGRtoQpixMap();	//QString
 	void cvMat2QPixmap(Mat matrizImagen);	//, int matFilas, int matColumnas
 	void mostrarOriginal();
 	void ocultarOriginal();
-	void resizeImagen();
+	void resizeImagen(int valor);		//realiza el resize en función del porcentaje indicado como valor
+	void cambiarLabelResolucion();			//Cambia la resolucion original de la imagen y lineEdit
+	void cambiarSliderResolucion();			//Cambia la resolucion original de la imagen y Slider
 	void direccionEntrada(QString);
 	void selecValProm();
 	void selecValInd();
@@ -65,12 +69,15 @@ static struct ImagenCargada {
 	bool valManualPHI = false;
 
 	bool ejecutaAlgoritmo = false; // Si queremos llamar a unas funciones sin ejecutar Algoritmo de decoloración
-	bool cargandoImagen = false;	// Si es la primera vez que se carga la imagen y la queremos ver a color
+	bool cargandoImagen = false;	// Si es la primera vez que se carga la imagen y la queremos ver a color // Una variable que indica que si NO es una imagen recién cargada se pueden reestablecer valores que permiten ejecutar el algoritmo
 	bool guardandoImagen = false;	// Si presionamos el botón de GUARDAR se quiere la imagen FULL SIZE, sin resize
 
+	int altoOriginal;
+	int anchoOriginal;
+
 	QString fileName;
-	Mat imagen; //ImagenOriginal que se lee del archivo
-	Mat imagenResized;
+	Mat imagen;						//ImagenOriginal que se lee del archivo y se modifica con resize()
+	Mat imagenResized;				//Imagen escalada (a color o decolorada)
 	Mat magnitudBlue;
 	Mat magnitudGreen;
 	Mat magnitudRed;
@@ -80,6 +87,8 @@ static struct ImagenCargada {
 	Mat complexLSplit[2];
 	Mat complexaSplit[2];
 	Mat complexbSplit[2];
-	Mat IMAGENFINAL;
+	Mat IMAGENFINAL;					// Es la imagen FINAL del algoritmo, Full size (o no, si se selecciona la opción)
+	Mat complexLmodSplit[2];
+	QImage QImageImagenResized;			//Imagen original en resize pero en formato QImage
 
 } imagenCargada;
