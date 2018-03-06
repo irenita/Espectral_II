@@ -1360,3 +1360,4 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		ui.horizontalSliderResolucion->setValue((ui.lineEditResolucion->text()).toDouble());
 
 	}
+
