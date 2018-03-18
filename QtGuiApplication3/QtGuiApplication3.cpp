@@ -177,17 +177,17 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			imagenCargada.valIndTITA = false;	//true
 			imagenCargada.valManualTITA = true;
 		}
-
-
+		
 		// *** Al arrancar por primera vez el programa, todos los valores están FALSOS
 		// *** por lo que vamos a indicar que si TODOS son falsos colocamos PHI manual como TRUE
 		if (false == imagenCargada.valPromPHI == imagenCargada.valIndPHI == imagenCargada.valManualPHI)
 			imagenCargada.valManualPHI = true;
-		
+				
 		// Llamamos a la función que activa las opciones de TITA individual
 		ui.pushButtonValInd->setEnabled(true);
 		ui.pushButtonValProm->setEnabled(true);
 
+		
 		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
 		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
@@ -197,6 +197,20 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
+
+		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
+		//ya que cuando se está en valProm ejecutaAlgoritmo == false
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+		
+			imagenCargada.valPromTITA = false;
+			imagenCargada.valIndTITA = false;	//true
+			imagenCargada.valManualTITA = true;
+
+			imagenCargada.cargandoImagen = false;
+			algoritmoParteUno();
+			algoritmoParteDos();
+		}
+
 
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
@@ -249,6 +263,19 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			algoritmoParteDos();
 		}
 
+		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
+		//ya que cuando se está en valProm ejecutaAlgoritmo == false
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+
+			imagenCargada.valPromPHI = false;
+			imagenCargada.valIndPHI = false;	//true
+			imagenCargada.valManualPHI = true;
+
+			imagenCargada.cargandoImagen = false;
+			algoritmoParteUno();
+			algoritmoParteDos();
+		}
+
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
 	}
@@ -287,6 +314,19 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) { // & imagenCargada.cargandoImagen == false
+			imagenCargada.cargandoImagen = false;
+			algoritmoParteUno();
+			algoritmoParteDos();
+		}
+
+		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
+		//ya que cuando se está en valProm ejecutaAlgoritmo == false
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+
+			imagenCargada.valPromTITA = false;
+			imagenCargada.valIndTITA = false;	//true
+			imagenCargada.valManualTITA = true;
+
 			imagenCargada.cargandoImagen = false;
 			algoritmoParteUno();
 			algoritmoParteDos();
@@ -349,6 +389,18 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			algoritmoParteDos();
 		}
 
+		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
+		//ya que cuando se está en valProm ejecutaAlgoritmo == false
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+
+			imagenCargada.valPromPHI = false;
+			imagenCargada.valIndPHI = false;	//true
+			imagenCargada.valManualPHI = true;
+
+			imagenCargada.cargandoImagen = false;
+			algoritmoParteUno();
+			algoritmoParteDos();
+		}
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
 	}
@@ -441,6 +493,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	void QtGuiApplication3::botonGuardarImagen()
 	{
+		//Si no se ha cargado alguna imagen, no permito acciones con el botón
+		if (imagenCargada.fileName.isEmpty()) {
+			return;
+		}
+		
 		//Para tomar el tiempo:
 		clock_t t_ini, t_fin;
 		double secs;
@@ -589,6 +646,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	// Cuando se presiona el boton de Valores Promedio
 	void QtGuiApplication3::selecValProm() {
 
+		//Si no se ha cargado alguna imagen, no permito acciones con el botón
+		if (imagenCargada.fileName.isEmpty()) {
+			return;
+		}
+
 		// Una variable que indica que ya NO es una imagen recién cargada
 		// y que reestablecer valores permite ejecutar el algoritmo
 		imagenCargada.cargandoImagen = false;
@@ -602,6 +664,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		imagenCargada.valIndPHI = false;
 		imagenCargada.valManualTITA = false;
 		imagenCargada.valManualPHI = false;
+
 		//ui.pushButtonValProm->setStyleSheet(QStringLiteral("background-color: rgb(151, 151, 151);"));
 		ui.pushButtonValProm->setDisabled(true);
 		ui.pushButtonValInd->setEnabled(true);
@@ -618,6 +681,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	// Cuando se presiona el boton de Valores Individuales
 	void QtGuiApplication3::selecValInd() {
+
+		//Si no se ha cargado alguna imagen, no permito acciones con el botón
+		if (imagenCargada.fileName.isEmpty()) {
+			return;
+		}
 
 		// Una variable que indica que ya NO es una imagen recién cargada
 		// y que reestablecer valores permite ejecutar el algoritmo
