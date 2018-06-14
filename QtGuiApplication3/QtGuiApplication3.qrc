@@ -1,4 +1,7 @@
 <RCC>
     <qresource prefix="QtGuiApplication3">
     </qresource>
+  <qresource>
+    <file>icons/BNicon.png</file>
+  </qresource>
 </RCC>

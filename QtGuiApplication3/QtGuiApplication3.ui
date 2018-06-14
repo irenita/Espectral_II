@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>802</width>
-    <height>583</height>
+    <width>1000</width>
+    <height>659</height>
    </rect>
   </property>
   <property name="palette">
@@ -239,6 +239,10 @@
   <property name="windowTitle">
    <string>Decoloración Espectral</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="QtGuiApplication3.qrc">
+    <normaloff>:/icons/BNicon.png</normaloff>:/icons/BNicon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="palette">
     <palette>
@@ -334,8 +338,8 @@
    <widget class="QPushButton" name="pushButtonSalir">
     <property name="geometry">
      <rect>
-      <x>740</x>
-      <y>470</y>
+      <x>940</x>
+      <y>510</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -359,8 +363,8 @@
    <widget class="QPushButton" name="pushButtonAbrir">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>10</y>
+      <x>780</x>
+      <y>20</y>
       <width>211</width>
       <height>26</height>
      </rect>
@@ -379,8 +383,8 @@
    <widget class="QSlider" name="horizontalSliderTITA">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>110</y>
+      <x>780</x>
+      <y>120</y>
       <width>211</width>
       <height>19</height>
      </rect>
@@ -391,13 +395,19 @@
      </font>
     </property>
     <property name="minimum">
-     <number>0</number>
+     <number>-9999</number>
     </property>
     <property name="maximum">
      <number>9999</number>
     </property>
     <property name="singleStep">
      <number>100</number>
+    </property>
+    <property name="pageStep">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>0</number>
     </property>
     <property name="sliderPosition">
      <number>0</number>
@@ -421,8 +431,8 @@
    <widget class="QLineEdit" name="lineEditTITA">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>80</y>
+      <x>920</x>
+      <y>90</y>
       <width>70</width>
       <height>20</height>
      </rect>
@@ -506,8 +516,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>80</y>
+      <x>780</x>
+      <y>90</y>
       <width>51</width>
       <height>16</height>
      </rect>
@@ -590,8 +600,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>140</y>
+      <x>780</x>
+      <y>150</y>
       <width>41</width>
       <height>16</height>
      </rect>
@@ -647,8 +657,8 @@
    <widget class="QSlider" name="horizontalSliderPHI">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>170</y>
+      <x>780</x>
+      <y>180</y>
       <width>211</width>
       <height>19</height>
      </rect>
@@ -658,10 +668,16 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="minimum">
+     <number>-9999</number>
+    </property>
     <property name="maximum">
      <number>9999</number>
     </property>
     <property name="singleStep">
+     <number>100</number>
+    </property>
+    <property name="pageStep">
      <number>100</number>
     </property>
     <property name="orientation">
@@ -677,8 +693,8 @@
    <widget class="QLineEdit" name="lineEditPHI">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>140</y>
+      <x>920</x>
+      <y>150</y>
       <width>70</width>
       <height>20</height>
      </rect>
@@ -734,8 +750,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>561</width>
-      <height>501</height>
+      <width>751</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -754,8 +770,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>250</y>
+      <x>820</x>
+      <y>270</y>
       <width>151</width>
       <height>31</height>
      </rect>
@@ -811,8 +827,8 @@
    <widget class="QPushButton" name="pushButtonValProm">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>280</y>
+      <x>780</x>
+      <y>300</y>
       <width>211</width>
       <height>26</height>
      </rect>
@@ -922,8 +938,8 @@
    <widget class="QPushButton" name="pushButtonValInd">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>310</y>
+      <x>780</x>
+      <y>330</y>
       <width>211</width>
       <height>26</height>
      </rect>
@@ -1033,8 +1049,8 @@
    <widget class="QPushButton" name="pushButtonReestVal">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>340</y>
+      <x>780</x>
+      <y>360</y>
       <width>211</width>
       <height>26</height>
      </rect>
@@ -1228,8 +1244,8 @@
    <widget class="QPushButton" name="pushButtonGuardar">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>470</y>
+      <x>780</x>
+      <y>510</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -1251,8 +1267,8 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>40</y>
+      <x>830</x>
+      <y>50</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -1311,8 +1327,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>80</y>
+      <x>850</x>
+      <y>90</y>
       <width>51</width>
       <height>16</height>
      </rect>
@@ -1448,8 +1464,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>140</y>
+      <x>850</x>
+      <y>150</y>
       <width>51</width>
       <height>16</height>
      </rect>
@@ -1584,8 +1600,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>561</width>
-      <height>501</height>
+      <width>751</width>
+      <height>591</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1604,8 +1620,8 @@
    <widget class="QPushButton" name="pushButtonImagenOriginal">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>380</y>
+      <x>780</x>
+      <y>400</y>
       <width>211</width>
       <height>25</height>
      </rect>
@@ -1741,8 +1757,8 @@
    <widget class="QLineEdit" name="lineEditLuminancia">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>200</y>
+      <x>920</x>
+      <y>210</y>
       <width>71</width>
       <height>20</height>
      </rect>
@@ -1796,8 +1812,8 @@
    <widget class="QSlider" name="horizontalSliderLuminancia">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>230</y>
+      <x>780</x>
+      <y>240</y>
       <width>211</width>
       <height>19</height>
      </rect>
@@ -1817,7 +1833,7 @@
      <number>100</number>
     </property>
     <property name="pageStep">
-     <number>10</number>
+     <number>100</number>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
@@ -1832,8 +1848,8 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>200</y>
+      <x>780</x>
+      <y>210</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -1890,9 +1906,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>510</y>
+      <y>600</y>
       <width>151</width>
-      <height>15</height>
+      <height>16</height>
      </rect>
     </property>
     <property name="palette">
@@ -1946,8 +1962,8 @@
    <widget class="QCheckBox" name="checkBox_escalaOriginal">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>510</y>
+      <x>780</x>
+      <y>550</y>
       <width>171</width>
       <height>20</height>
      </rect>
@@ -2053,8 +2069,8 @@
    <widget class="QLabel" name="label_resolucion">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>420</y>
+      <x>830</x>
+      <y>450</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -2110,8 +2126,8 @@
    <widget class="QSlider" name="horizontalSliderResolucion">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>440</y>
+      <x>780</x>
+      <y>470</y>
       <width>211</width>
       <height>19</height>
      </rect>
@@ -2140,8 +2156,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>420</y>
+      <x>780</x>
+      <y>450</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -2197,8 +2213,8 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>420</y>
+      <x>960</x>
+      <y>450</y>
       <width>31</width>
       <height>20</height>
      </rect>
@@ -2257,8 +2273,8 @@
    <widget class="QLineEdit" name="lineEditResolucion">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>420</y>
+      <x>900</x>
+      <y>450</y>
       <width>28</width>
       <height>16</height>
      </rect>
@@ -2312,8 +2328,8 @@
    <widget class="QLabel" name="label_percent">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>420</y>
+      <x>930</x>
+      <y>450</y>
       <width>12</width>
       <height>16</height>
      </rect>
@@ -2381,7 +2397,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>802</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>

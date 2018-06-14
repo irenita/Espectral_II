@@ -20,55 +20,45 @@ public:
 private:
 	Ui::QtGuiApplication3Class ui;
 
-public slots:   //private
+public slots:
 	void botonCargarImagen();
 	void cambiarLabelTITA(int);
 	void cambiarLabelPHI(int);
 	void cambiarSliderTITA();
-	//void cambiarSliderTITA_ValProm();
 	void cambiarSliderPHI();
 	void cambiarSliderLuminancia();
 	void cambiarLabelLuminancia();
-	//void cambiarSliderPHI_ValProm();
 	void mensajeSalir();
 	void botonGuardarImagen();
-	//void transformacionBGRtoQpixMap();	//QString
-	void cvMat2QPixmap(Mat matrizImagen);	//, int matFilas, int matColumnas
+	void cvMat2QPixmap(Mat matrizImagen);	// int matFilas, int matColumnas
 	void mostrarOriginal();
 	void ocultarOriginal();
-	void resizeImagen(int valor);		//realiza el resize en función del porcentaje indicado como valor
+	void resizeImagen(int valor);			//Realiza el resize en función del porcentaje indicado como valor
 	void cambiarLabelResolucion();			//Cambia la resolucion original de la imagen y lineEdit
 	void cambiarSliderResolucion();			//Cambia la resolucion original de la imagen y Slider
 	void direccionEntrada(QString);
 	void selecValProm();
 	void selecValInd();
 	void reestValores();
-	//void selecTITAprom();
-	//void selecPHIprom();
 	void algoritmoParteUno();
 	void algoritmoParteDos();
-	//void direccionEntrada(QString);
 };
 
 // *************************************************************
 
 
-//QPixmap mat_to_qimage_cpy(Mat, enum QImage::Format);  //  const //QImage::Format
-
-//void ImagenCargada::setDireccionEntrada(QString direccion)   //char* direccion
-
 static struct ImagenCargada {
 
-	string nombreArchivo;
+	string nombreArchivo;			// String de fileName que es QString
 	
-	bool valPromTITA = false;	//true
+	bool valPromTITA = false;
 	bool valIndTITA = false;
-	bool valPromPHI = false;		//true
+	bool valPromPHI = false;
 	bool valIndPHI = false;
 	bool valManualTITA = false;
 	bool valManualPHI = false;
 
-	bool ejecutaAlgoritmo = false; // Si queremos llamar a unas funciones sin ejecutar Algoritmo de decoloración
+	bool ejecutaAlgoritmo = false;	// Si queremos llamar a unas funciones sin ejecutar Algoritmo de decoloración
 	bool cargandoImagen = false;	// Si es la primera vez que se carga la imagen y la queremos ver a color // Una variable que indica que si NO es una imagen recién cargada se pueden reestablecer valores que permiten ejecutar el algoritmo
 	bool guardandoImagen = false;	// Si presionamos el botón de GUARDAR se quiere la imagen FULL SIZE, sin resize
 
@@ -88,7 +78,7 @@ static struct ImagenCargada {
 	Mat complexaSplit[2];
 	Mat complexbSplit[2];
 	Mat IMAGENFINAL;					// Es la imagen FINAL del algoritmo, Full size (o no, si se selecciona la opción)
-	Mat complexLmodSplit[2];
+	Mat complexLmodSplit[2];			// Experimento: el canal L de CIELab de la imagen se suma o resta al resultado final
 	QImage QImageImagenResized;			//Imagen original en resize pero en formato QImage
 
 } imagenCargada;

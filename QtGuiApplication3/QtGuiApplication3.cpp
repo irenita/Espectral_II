@@ -18,8 +18,6 @@
 using namespace std;
 using namespace cv;
 
-//static char dirEntrada[150];
-//static string dirEntrada;
 
 QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	: QMainWindow(parent)
@@ -34,20 +32,15 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	//QObject::connect(pushButtonAbrir, SIGNAL(released()), QtGuiApplication3Class, SLOT(botonCargarImagen()));
 	connect(ui.pushButtonGuardar, SIGNAL(released()), this, SLOT(botonGuardarImagen()));
 	connect(ui.horizontalSliderTITA, SIGNAL(valueChanged(int)), this, SLOT(cambiarLabelTITA(int)));
-	//connect(ui.horizontalSliderTITA, SIGNAL(sliderMoved(int)), this, SLOT(cambiarLabelTITA(int)));
 	connect(ui.horizontalSliderPHI, SIGNAL(valueChanged(int)), this, SLOT(cambiarLabelPHI(int)));
-	//connect(ui.horizontalSliderPHI, SIGNAL(sliderMoved(int)), this, SLOT(cambiarLabelPHI(int)));
 	connect(ui.lineEditTITA, SIGNAL(editingFinished()), this, SLOT(cambiarSliderTITA()));
 	connect(ui.lineEditPHI, SIGNAL(editingFinished()), this, SLOT(cambiarSliderPHI()));
 	connect(ui.pushButtonValProm, SIGNAL(released()), this, SLOT(selecValProm()));
 	connect(ui.pushButtonValInd, SIGNAL(released()), this, SLOT(selecValInd()));
 	connect(ui.pushButtonSalir, SIGNAL(released()), this, SLOT(mensajeSalir()));
 	connect(ui.pushButtonReestVal, SIGNAL(released()), this, SLOT(reestValores()));
-
-	//connect(ui.pushButtonImagenOriginal, SIGNAL(pressed()), this, SLOT(mostrarOriginal(true)));
 	connect(ui.pushButtonImagenOriginal, SIGNAL(pressed()), this, SLOT(mostrarOriginal()));
 	connect(ui.pushButtonImagenOriginal, SIGNAL(released()), this, SLOT(ocultarOriginal()));
-
 	connect(ui.lineEditLuminancia, SIGNAL(editingFinished()), this, SLOT(cambiarSliderLuminancia()));
 	connect(ui.horizontalSliderLuminancia, SIGNAL(valueChanged(int)), this, SLOT(cambiarLabelLuminancia()));
 	connect(ui.horizontalSliderResolucion, SIGNAL(valueChanged(int)), this, SLOT(cambiarLabelResolucion()));
@@ -62,9 +55,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	void QtGuiApplication3::botonCargarImagen()
 {
 	
-//		QPixmap pix("C:/Users/Irena/Downloads/Ire_SQ_glitch.jpg");
-
-		QString fileName = QFileDialog::getOpenFileName(this, tr("Abrir imagen..."),
+		QString fileName;
+		fileName = QFileDialog::getOpenFileName(this, tr("Abrir imagen..."),
 							"/home", tr("Im\303\241genes (*.png *.jpg *.tif *.bmp)"));
 		
 		if (fileName.isEmpty()) {
@@ -84,12 +76,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		}  // fin de fileName.isEmpty
 			
 		else {
-
-
+			
 			// Una variable que indica que ya es una imagen recién cargada
 			imagenCargada.cargandoImagen = true;
 
-			// Guardamos la direecion en el formato de QString static para posterior uso
+			// Guardamos la dirección en el formato de QString static para posterior uso
 			imagenCargada.fileName = fileName;
 			
 			int al = ui.label_pic->width();
@@ -101,65 +92,38 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			// Almacenamos el tamaño original de la imagen
 			imagenCargada.altoOriginal = pix.width();
 			imagenCargada.anchoOriginal = pix.height();
-
-
+			
 			imagenCargada.ejecutaAlgoritmo = false;
-			// Y reestablecemos los valores de las variables que pudieron cambiar durante el uso del programa
+
+			// Como puede que se carguen nuevas imágenes sin cerrar el programa
+			// Reestablecemos los valores de las variables que pudieron cambiar durante el uso del programa
 			reestValores();
 
-			
 			// Se carga la imagen escalada en la variable static cv::Mat imagenCargada.imagenResized
 			// El valor 100 es del 100% del tamaño original
 			resizeImagen(15);
-
-
+			
 			imagenCargada.ejecutaAlgoritmo = true;
+
+			direccionEntrada(fileName);	// la dirección de entrada se guarda en la variable static dirEntrada
 
 			// Una variable que indica que si se debe de ejecutar el algoritmo de decoloración
 			//imagenCargada.ejecutaAlgoritmo = true;
 
-		/*	
-			// Se muestra la imagen original
+		/*	// Se muestra la imagen original, FULL SIZE
 			ui.label_pic->setPixmap(pix.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
 			ui.label_pic->repaint();
 		*/
-			direccionEntrada(fileName);	// la dirección de entrada se guarda en la variable static dirEntrada
-
-			// Se inician o reinician las variables que determinan si los
-			// cálculos de valores de TITA y PHI son individuales o promedio
-			//imagenCargada.valPromTITA = true;
-			//imagenCargada.valIndTITA = false;
-			//imagenCargada.valPromPHI = true;
-			//imagenCargada.valIndPHI = false;
-
-			// ... se llama al proceso que trabajará el algoritmo de transformación
-	//***//		transformacionBGRtoQpixMap();	//transformacionBGRtoQpixMap(fileName);
-
-			// Como puede que se carguen nuevas imágenes sin cerrar el programa
-			// se reinician las variables pertinentes
-			//reestValores();	//no sirve bien
-
-			// Apenas se selecciona una imagen nueva se ejecuta una primera parte del algoritmo
-			// Algoritmo que establece las variables que no cambian una vez cargada la imagen
-			//algoritmoParteUno();
-			// La primera vez que se carga la imagen tenemos su referencia de QPixmap
-			//cvMat2QPixmap(imagenCargada.imagen);
+						
 		}
 
-		// Una variable que indica que ya es una imagen recién cargada
-		//imagenCargada.cargandoImagen = true;
-		///imagenCargada.ejecutaAlgoritmo = true;
 }
+
 
 	// TITA reacciona sobre la Luminosidad y sobre ambos tonos
 	void QtGuiApplication3::cambiarLabelTITA(int valor) {
 
-		// Una variable que indica que ya NO es una imagen recién cargada
-		// y que reestablecer valores permite ejecutar el algoritmo
-		//imagenCargada.cargandoImagen = false;
-		//imagenCargada.ejecutaAlgoritmo = true;
-		
-		float valueTITA = ((float)valor / (float) ui.horizontalSliderTITA->maximum());
+		float valueTITA = 3.0*((float)valor / (float) ui.horizontalSliderTITA->maximum());
 		int enteroTITA = (int)(valueTITA * 10000.0);
 		double flotanteTITA = (double)(0.0);
 		flotanteTITA = enteroTITA / 10000.0;
@@ -186,13 +150,10 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// Llamamos a la función que activa las opciones de TITA individual
 		ui.pushButtonValInd->setEnabled(true);
 		ui.pushButtonValProm->setEnabled(true);
-
-		
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
+				
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
-		if(imagenCargada.ejecutaAlgoritmo == true){  // & imagenCargada.cargandoImagen == false
+		if(imagenCargada.ejecutaAlgoritmo == true){
 			imagenCargada.cargandoImagen = false;
 			algoritmoParteUno();
 			algoritmoParteDos();
@@ -210,21 +171,17 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
-
-
+	
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
 
 	}
 
+
 	// PHI reacciona sobre los tonos a y b
 	void QtGuiApplication3::cambiarLabelPHI(int valor) {
-
-		// Una variable que indica que ya NO es una imagen recién cargada
-		// y que reestablecer valores permite ejecutar el algoritmo
-		//imagenCargada.cargandoImagen = false;
-
-		float valuePHI = ((float)valor / (float)ui.horizontalSliderPHI->maximum());
+		
+		float valuePHI = 5.0*((float)valor / (float)ui.horizontalSliderPHI->maximum());
 		int enteroPHI = (int)(valuePHI * 10000.0);
 		double flotantePHI = (double)(0.0);
 		flotantePHI = enteroPHI / 10000.0;
@@ -252,9 +209,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		ui.pushButtonValInd->setEnabled(true);
 		ui.pushButtonValProm->setEnabled(true);
 
-
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) {
@@ -265,10 +219,10 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
 		//ya que cuando se está en valProm ejecutaAlgoritmo == false
-		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromPHI == true) {
 
 			imagenCargada.valPromPHI = false;
-			imagenCargada.valIndPHI = false;	//true
+			imagenCargada.valIndPHI = false;
 			imagenCargada.valManualPHI = true;
 
 			imagenCargada.cargandoImagen = false;
@@ -280,16 +234,13 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		ui.label_mensajeGuardando->setVisible(false);
 	}
 
+
 	// Cuando se presione ENTER en la casilla del numero TITA se desplaza el SliderTITA
 	void QtGuiApplication3::cambiarSliderTITA() {
-
-		// Una variable que indica que ya NO es una imagen recién cargada
-		// y que reestablecer valores permite ejecutar el algoritmo
-		//imagenCargada.cargandoImagen = false;
-
+		
 		QString valueTITA2 = ui.lineEditTITA->text();
 		double valorTITAint = valueTITA2.toDouble();
-		valorTITAint = valorTITAint * 10000;				//Slider va de 0 a 9999 // para tener 4 decimales
+		valorTITAint = valorTITAint * 10000 / 3;				//Slider va de -9999 a 9999 de -3 a 3// para tener 4 decimales
 		ui.horizontalSliderTITA->setValue(valorTITAint);
 		
 		// *** Si se cambia el slider se coloca TITA como valor manual
@@ -309,8 +260,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		ui.pushButtonValInd->setEnabled(true);
 		ui.pushButtonValProm->setEnabled(true);
 
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) { // & imagenCargada.cargandoImagen == false
@@ -337,29 +286,13 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
-	// Cuando se presione BOTON valPromTITA, TITA se desplaza el SliderTITA
-/*	void QtGuiApplication3::cambiarSliderTITA_ValProm() {
-
-		QString valueTITA2 = ui.lineEditTITA->text();
-		double valorTITAint = valueTITA2.toDouble();
-		valorTITAint = valorTITAint * 10000;				//Slider va de 0 a 9999 // para tener 4 decimales
-		ui.horizontalSliderTITA->setValue(valorTITAint);
-
-		// El algoritmo se llama desde el pushButton Valores Promedio
-
-	}
-	*/
-
+	
 	// Cuando se presione ENTER en la casilla del numero PHI se desplaza el SliderPHI
 	void QtGuiApplication3::cambiarSliderPHI() {
-
-		// Una variable que indica que ya NO es una imagen recién cargada
-		// y que reestablecer valores permite ejecutar el algoritmo
-		//imagenCargada.cargandoImagen = false;
-
+		
 		QString valuePHI2 = ui.lineEditPHI->text();
 		double valorPHIint = valuePHI2.toDouble();
-		valorPHIint = valorPHIint * 10000;				//Slider va de 0 a 9999
+		valorPHIint = valorPHIint * 10000 / 5;				//Slider va de -9999 a 9999 de -5 a 5
 		ui.horizontalSliderPHI->setValue(valorPHIint);
 
 		// *** Si se cambia el slider se coloca PHI como valor individual
@@ -378,9 +311,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		ui.pushButtonValInd->setEnabled(true);
 		ui.pushButtonValProm->setEnabled(true);
 
-
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) {
@@ -391,7 +321,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 		//Si se cumple, es que estamos fuera del valProm y se permite el valor manual
 		//ya que cuando se está en valProm ejecutaAlgoritmo == false
-		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromTITA == true) {
+		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.valPromPHI == true) {
 
 			imagenCargada.valPromPHI = false;
 			imagenCargada.valIndPHI = false;	//true
@@ -404,33 +334,16 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
 	}
+		
 
-	// Cuando se presione BOTON valPromPHI, PHI se desplaza el SliderPHI
-/*	void QtGuiApplication3::cambiarSliderPHI_ValProm() {
-
-		QString valuePHI2 = ui.lineEditPHI->text();
-		double valorPHIint = valuePHI2.toDouble();
-		valorPHIint = valorPHIint * 10000;				//Slider va de 0 a 9999
-		ui.horizontalSliderPHI->setValue(valorPHIint);
-
-	}
-*/
-
-
-// Cuando se presione ENTER en la casilla del numero TITA se desplaza el SliderTITA
+	// Cuando se presione ENTER en la casilla del numero TITA se desplaza el SliderTITA
 	void QtGuiApplication3::cambiarSliderLuminancia() {
-
-		// Una variable que indica que ya NO es una imagen recién cargada
-		// y que reestablecer valores permite ejecutar el algoritmo
-		//imagenCargada.cargandoImagen = false;
-
+		
 		QString valueLmodString = ui.lineEditLuminancia->text();
 		double valueLmod = valueLmodString.toDouble();
 		valueLmod = valueLmod * 10000;				//Slider va de 0 a 9999 // para tener 4 decimales
 		ui.horizontalSliderLuminancia->setValue(valueLmod);
 
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) { // & imagenCargada.cargandoImagen == false
@@ -444,6 +357,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
 	// Cuando se desplaza el slider se cambia el correspondiente label de Luminancia
 	void QtGuiApplication3::cambiarLabelLuminancia() {
 
@@ -454,8 +368,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		flotanteLumi = enteroLumi / 10000.0;
 		ui.lineEditLuminancia->setText(QVariant(flotanteLumi).toString());
 
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
 		// SI LA VARIABLE EJECUTARALGORITMO LO INDICA
 		// sino estamos en la primera carga de una imagen, que queremos a color
 		if (imagenCargada.ejecutaAlgoritmo == true) {  // & imagenCargada.cargandoImagen == false
@@ -469,7 +381,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
-	// Mensaje que se arroha si se desea salir de la aplicación
+
+	// Mensaje que se arroja si se desea salir de la aplicación
 	void QtGuiApplication3::mensajeSalir() {
 
 		QMessageBox msgBox;
@@ -491,6 +404,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
 	void QtGuiApplication3::botonGuardarImagen()
 	{
 		//Si no se ha cargado alguna imagen, no permito acciones con el botón
@@ -498,7 +412,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			return;
 		}
 		
-		//Para tomar el tiempo:
+		//Para tomar el tiempo, las variables:
 		clock_t t_ini, t_fin;
 		double secs;
 
@@ -509,13 +423,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//dialogoGuardar.exec();
 
 		// GUARDAMOS EL RESULTADO Y LO MOSTRAMOS
-		/* 
-		imwrite("C:/Users/Irena/Pictures/Gray_Image2.jpg", imagenLabBGRtoRGB, vector<int>({ CV_IMWRITE_JPEG_QUALITY, 100 }));
-		QPixmap pix("C:/Users/Irena/Pictures/Gray_Image.jpg");
-		ui.label_pic->setPixmap(pix.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
-		ui.label_pic->repaint();
-		*/
-
+		
 		QString selectedFilter;
 		QString fileName = QFileDialog::getSaveFileName(this, tr("Guardar archivo"),
 			imagenCargada.fileName.left(imagenCargada.fileName.size()-4)+"_Decolorized",	//Le quitamos el .jpg o .png final
@@ -564,7 +472,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 				QString lumi = "_Lumi" + ui.lineEditLuminancia->text();
 
-				//*** TIEMPO
+				//*** TIEMPO de ejecución de uno() y dos()
 
 				QString segundos = "_seg";
 
@@ -585,6 +493,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 						resol = resol + ui.lineEditResolucion->text();
 
 				//*** NOMBRE
+
 					//guardamos la extensión seleccionala en el FileDialog
 					QString extension = fileName.right(4);
 					//Guardamos el nombre que coloca el usuario, sin la extensión
@@ -611,8 +520,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 			} // FIN de imagenCargada.cargandoImagen == false
 
-			else {	// else de imagenCargada.cargandoImagen == false
-					// Es decir, que la imagen no fue modificada y queremos guardarla a color
+			else {	
+				// else de imagenCargada.cargandoImagen == false
+				// Es decir, que la imagen no fue modificada y queremos guardarla a color
 				if (imagenCargada.cargandoImagen == true) {
 
 					imagenCargada.guardandoImagen = true;
@@ -642,6 +552,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//ui.label_mensajeGuardando->setVisible(false); 
 	
 	}
+
 
 	// Cuando se presiona el boton de Valores Promedio
 	void QtGuiApplication3::selecValProm() {
@@ -679,6 +590,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
 	// Cuando se presiona el boton de Valores Individuales
 	void QtGuiApplication3::selecValInd() {
 
@@ -713,27 +625,16 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
 	// Cuando se presiona el botón de Reestablecer Valores
 	void QtGuiApplication3::reestValores() {
 		
-		// Una variable que indica que no se debe de ejecutar el algoritmo
-		// que queremos que los valores se reinicien
-		// se ejecuta el algoritmo al final si no se está cargando la imagen
-		//imagenCargada.ejecutaAlgoritmo = false;
-
 		// Se colorcan en 0 los labeles que indican el valor de TITA y PHI
 		ui.horizontalSliderTITA->setValue(0.0);
 		ui.horizontalSliderPHI->setValue(0.0);
-		//ui.labelPHI->setText("0");
-		//cambiarLabelTITA(0);
-		//cambiarLabelPHI(0);
 
-		//ui.lineEditLuminancia->setText("0");
 		ui.horizontalSliderLuminancia->setValue(0.0);
-
-		// Indicamos que la imagen no se está guardando
-		//imagenCargada.guardandoImagen = false;
-
+		
 		imagenCargada.valPromTITA = false;
 		imagenCargada.valIndTITA = false;
 		imagenCargada.valPromPHI = false;
@@ -742,14 +643,10 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		imagenCargada.valManualPHI = true;
 
 		ui.pushButtonValProm->setEnabled(true);
-		//cambiarSliderTITA();
 		ui.pushButtonValInd->setEnabled(true);
-		//cambiarSliderPHI();
 		ui.labelTITA->hide();
 		ui.labelPHI->hide();
-
-		//imagenCargada.ejecutaAlgoritmo = true;
-
+		
 		// Si esta función es llamada cuando se carga la imagen
 		// y la queremos ver a color, sin ejecutar la decoloración
 		// no permitimos que se ejecuten los algoritmos de decoloración
@@ -758,84 +655,26 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
-	///cvMat2QPixmap(imagenCargada.imagen);
 
 		//Ya la imagen fue modificada, no es la misma que se guardó por el usuario (si se había guardado)
 		ui.label_mensajeGuardando->setVisible(false);
 		
 	}
+	
 
-	// Cuando se desliza el slider de TITA o se cambia el box de TITA
-	// TITA se vuelve promedio pero PHI se queda en su estado
-/*	void QtGuiApplication3::selecTITAprom() {
-		imagenCargada.valPromTITA = true;
-		imagenCargada.valIndTITA = false;
-		ui.pushButtonValProm->setDisabled(true);
-		ui.pushButtonValInd->setEnabled(true);
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
-		algoritmoParteUno();
-		algoritmoParteDos();
-
-	}
-*/
-	// Cuando se desliza el slider de PHI o se cambia el box de PHI
-	// PHI se vuelve promedio pero TITA se queda en su estado
-/*	void QtGuiApplication3::selecPHIprom() {
-		imagenCargada.valPromPHI = true;
-		imagenCargada.valIndPHI = false;
-		ui.pushButtonValProm->setDisabled(true);
-		ui.pushButtonValInd->setEnabled(true);
-		// EJECUTAMOS LA SEGUNDA PARTE DEL ALGORITMO
-		// EN DONDE SE CAMBIAN LAS MATRICES
-		algoritmoParteUno();
-		algoritmoParteDos();
-
-	}
-*/
-
-	// Se pasa un bool como parámetro que indica si la matriz que se va a cargar es la
-	// gran matriz de la imagen original o sino es la imagenResized
+	// Primera carga de matrices del algoritmo de decoloración
 	void QtGuiApplication3::algoritmoParteUno()
 	{
-		//*********************************************************************//
-		//**** ESTA PARTE SE MANEJA CON ImagenCargada::setDireccionEntrada ****//
-		// char entrada[100] = "Flor.jpg";
-		/*		char entrada[100] = "";
-		string stringDireccion = direccion.toUtf8();
-		// int n = stringDireccion.length();
-		strcpy(entrada, stringDireccion.c_str());		// copying the contents of the string to char array
-		*/
-		//*********************************************************************//
-		//*********************************************************************//
-
-		//	char entrada[100] = "";
-		//	direccionEntrada(direccion);	
-		// la dirección de entrada se guarda en la variable static dirEntrada
-
-		//Mat imagen;										// new image - nueva imagen
-		///imagen = imread(entrada, IMREAD_COLOR);			// read the file - leer el archivo
-		//		imagen = imread(ImagenCargada::dirEntrada, IMREAD_COLOR);			// read the file - leer el archivo
-		
+				
 		// Si la imagen que queremos es la ORIGINAL TAMAÑO REAL:
 		if (imagenCargada.guardandoImagen == true & ui.checkBox_escalaOriginal->isChecked()) {
 			imagenCargada.imagen = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);  // 8 bit
-			
 		}
-		else
+		else{
 			// Si la imagen que queremos es la RESIZED:
 			imagenCargada.imagen = imagenCargada.imagenResized;
-		
-		//	imagen = imread(dirEntrada, IMREAD_COLOR);
-
-/*		if (!imagenCargada.imagen.data)								// Check for invalid input - chequea entrada invalida
-		{
-			cout << "No se pudo abrir o encontrar la imagen";
-			//CargarimagenBGR();
-			cin.get();
-			return;
 		}
-*/
+		
 		//**********************************************************************************//
 		// ************************************** BGR ************************************* //
 		// **** SE ALMACENA CADA CANAL EN imagenBGR[]
@@ -843,32 +682,15 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		Mat imagenBGR[3];						//	Matriz de 3 canales 
 		imagenCargada.imagen.convertTo(imagenCargada.imagen, CV_8U);		//	8U es de 0 a 255  //32F es de 0 a 1 CV_32F, 1.0/255
 		split(imagenCargada.imagen, imagenBGR);				//	Separa la imagen original en 3 canales BGR (BlueGreenRed)
-															//cout << imagenBGR[0];
 
-															//  ****************************** BGR to CIELab ********************************** //
-															//  **** SE ALMACENA CADA CANAL EN imagenLab[]
+		//  ****************************** BGR to CIELab ********************************** //
+		//  **** SE ALMACENA CADA CANAL EN imagenLab[]
 
 		Mat imagenLab_temp;								// si imagen.cargada es de 32F, CIELab es de 0 a 100 y -127 a 127
 		cvtColor(imagenCargada.imagen, imagenLab_temp, CV_BGR2Lab);	// Conversion de BGR 0 255 a CIELab	0 255
 		Mat imagenLab[3];
 		split(imagenLab_temp, imagenLab);				// Separa la imagen CIELab en 3 canales L a b
-														//cout << imagenLab[1]; // imagenLab todos sus canales son de 0 a 255
-
-														//Mat imagenLab_NEW(imagen.rows, imagen.cols, CV_8UC3); //CV_8UC3   // U porque va de 0 a 255
-														//merge(imagenLab,3,imagenLab_NEW);
-														//	cvtColor(imagenLab_NEW, imagenLab_temp, CV_Lab2BGR);
-														//	split(imagenLab_temp, imagenLab);
-														//namedWindow("L_merge", CV_WINDOW_NORMAL);
-														//imshow("L_merge", imagenLab_NEW);
-
-														//namedWindow("L", CV_WINDOW_NORMAL);
-														//		namedWindow("L", CV_WINDOW_NORMAL);
-														//		namedWindow("a", CV_WINDOW_NORMAL);
-														//		namedWindow("b", CV_WINDOW_NORMAL);
-														//		imshow("L", imagenLab[0]);
-														//		imshow("a", imagenLab[1]);
-														//		imshow("b", imagenLab[2]);
-
+														// imagenLab todos sus canales son de 0 a 255
 
 	// ****************************************************************************************//
 	// ****************************  FFT  en  BGR y en CLIEAB  ********************************//
@@ -884,7 +706,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		tempRed.convertTo(tempRed, CV_32F);			// 0 a 255
 		
 		Mat complexBlue, complexGreen, complexRed;    //Complex plane to contain the DFT coefficients {[0]-Real,[1]-Img}
-													  //	merge(planes, 2, complexI);
+
 		dft(tempBlue, complexBlue, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
 		dft(tempGreen, complexGreen, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
 		dft(tempRed, complexRed, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
@@ -904,9 +726,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		tempLoriginal = imagenLab[0];
 		tempL.convertTo(tempLoriginal, CV_32F);		// 0 a 255
 
-		// La luminosidad indicada va de -1.0 a 1.0, indicando si se sumará o restará su valor al resultado
+		// La luminosidad indicada va de -1.0 a 1.0, (aunque el usuario puede editarla fuera de este rango)
+		// indicando si se sumará o restará su valor al resultado
 		QString valorIncluido = ui.lineEditLuminancia->text();
 		//double val = valorIncluido.toFloat();
+
 		// Obtenemos el porcentaje de luminosidad para agregar (o restar)
 		multiply(tempLoriginal, valorIncluido.toFloat(), tempLmodificado);
 
@@ -919,13 +743,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		Mat complexLmodificado;
 		dft(tempLmodificado, complexLmodificado, DFT_COMPLEX_OUTPUT);
 
-	/*	// Reconstructing original image from the DFT coefficients
-		Mat invDFTL, invDFTcvtL, invDFTa, invDFTcvta, invDFTb, invDFTcvtb;
-
-		cv::idft(complexL, invDFTL, DFT_SCALE | DFT_REAL_OUTPUT); // Applying IDFT
-		cv::idft(complexa, invDFTa, DFT_SCALE | DFT_REAL_OUTPUT); // Applying IDFT
-		cv::idft(complexb, invDFTb, DFT_SCALE | DFT_REAL_OUTPUT); // Applying IDFT
-	*/
 
 	// ****************************  FIN   FFT  en  BGR y en CLIEAB  ********************************//
 	// **********************************************************************************************//
@@ -935,11 +752,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	// complexBlue, complexGreen, complexRed, complexL, complexa, complexb
 
-		//Mat magnitudBlue;     // magnitudBlue3
+		//Mat magnitudBlue;
 		Mat complexBlueSplit[2];
 		split(complexBlue, complexBlueSplit);
 		magnitude(complexBlueSplit[0], complexBlueSplit[1], imagenCargada.magnitudBlue); //magnitudBlue |B^| es sqrt(R^2 +I^2)
-																		   //magnitudBlue = abs(complexBlue); //valor absoluto
+		//magnitudBlue = abs(complexBlue); //valor absoluto
 
 		//Mat magnitudGreen;
 		Mat complexGreenSplit[2];
@@ -966,8 +783,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		split(complexb, imagenCargada.complexbSplit);
 		magnitude(imagenCargada.complexbSplit[0], imagenCargada.complexbSplit[1], imagenCargada.magnitudb); //magnitudb |b^| es sqrt(R^2 +I^2)
 
-
-		//Complejo de L modificada
+		// EXPERIMENTO:
+		// Complejo de L modificada
 		split(complexLmodificado, imagenCargada.complexLmodSplit);
 		
 		// ***************** NOTA:
@@ -978,6 +795,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// **********************************************************************************************//
 	}
 
+
+	// Segunda parte del algoritmo de decoloración,
+	// en donde se utilizan los valores calculados de las magnitudes y canales
 	void QtGuiApplication3::algoritmoParteDos() {
  
 
@@ -986,19 +806,19 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 		Mat TITA;
 
-		if (imagenCargada.valPromTITA == true) {		//si el valor promerio de TITA está activo = true
+		//si el valor promedio de TITA está activo = true
+		if (imagenCargada.valPromTITA == true) {		
 
 			// Para TITA promedio:
-			//if (sum(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed).val[0] > 0)
 				TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
 					imagenCargada.magnitudRed - imagenCargada.magnitudL) /
 					(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed);
-			//else
+		
 			//	TITA = 1.0;
 
 			int m, n;
-			m = imagenCargada.imagen.rows;		// Filas = alto
-			n = imagenCargada.imagen.cols;		// Columnas = ancho
+			m = imagenCargada.imagen.rows;					// Filas = alto
+			n = imagenCargada.imagen.cols;					// Columnas = ancho
 			double TITA2 = sum(TITA).val[0] / (m*n);		//val[0] es el primer canal que retorna sum()
 															//	double TITA3 = sum(TITA).val[0];
 			TITA = TITA2;
@@ -1013,38 +833,41 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			// Se desactiva el label que muestra TITA Individual
 			ui.labelTITA->hide();
 			
-		}else
-		if (imagenCargada.valIndTITA == true) {		//si el valor individual de TITA está activado = true = valores individuales
-
-			// Para TITAs individuales:
-			TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
-				imagenCargada.magnitudRed - imagenCargada.magnitudL) /
-				(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed);
-
-			// Mostrtamos el valor promedio de TITA arrojado por la fórmula
-			ui.labelTITA->setText("Val Indv");
-			ui.labelTITA->show();
-
-		}else
-		//if (imagenCargada.valManualTITA == true)		 //Si el valor de TITA es manual o lo colocamos manual
-		{		
-			// Para TITA fijo, sin promedio:
-			TITA = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_32F);
-			//		TITA = 1.0;
-			QString textoTITA = ui.lineEditTITA->text();
-			TITA = textoTITA.toFloat();
-			// Se desactiva el mensaje de label que muestra TITA Individual
-			ui.labelTITA->hide();
-			//cout << "\nMAGNITUD TITA:" << TITA; //sum(magnitudb).val[0];
-			//cout << "\Valores de Lab:" << imagenLab[0];
-			//cout << "\nAlto:" << m << "\nAncho: " << n;
-		
 		}
+		else
+			//si el valor individual de TITA está activado = true = valores individuales
+			if (imagenCargada.valIndTITA == true) {		
+				// Para TITAs individuales:
+				TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
+					imagenCargada.magnitudRed - imagenCargada.magnitudL) /
+					(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed);
+
+				// Mostrtamos el valor promedio de TITA arrojado por la fórmula
+				ui.labelTITA->setText("Val Indv");
+				ui.labelTITA->show();
+
+			}
+			else
+				//Si el valor de TITA es manual o lo colocamos manual
+				//if (imagenCargada.valManualTITA == true)
+				{		
+					// Para TITA fijo, sin promedio:
+					TITA = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_32F);
+					//		TITA = 1.0;
+
+					QString textoTITA = ui.lineEditTITA->text();
+					TITA = textoTITA.toFloat();
+
+					// Se desactiva el mensaje de label que muestra TITA Individual
+					ui.labelTITA->hide();
+		
+				}
 
 		
 		Mat PHI;
 
-		if (imagenCargada.valPromPHI == true) {		//si el valor promedio de PHI está activo = true
+		//si el valor promedio de PHI está activo = true
+		if (imagenCargada.valPromPHI == true) {
 
 			PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
 			//	cout << "\nMAGNITUD PHI:" << PHI; //sum(magnitudb).val[0];
@@ -1065,25 +888,29 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			//Ocultamos el mensaje en label que muestra que estamos con PHI Individual
 			ui.labelPHI->hide();
 
-		}else
-		if (imagenCargada.valIndPHI == true) {		//si el valor individual de PHI está activado = true
-			// Para PHI sin promedio:
-			PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
-			// Mostrtamos el valor promedio de PHI arrojado por la fórmula
-			ui.labelPHI->setText("Val Indv");
-			ui.labelPHI->show();
-			
-		}else
-			//if (imagenCargada.valManualPHI == true)	//Si el valor de PHI es manual o lo colocamos manual
-		{	
-			// Para PHI fijo, sin promedio:
-			PHI = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_32F);
-			//		PHI = 0.0;
-			QString textoPHI = ui.lineEditPHI->text();
-			PHI = textoPHI.toFloat();
-			// Se desactiva el label que muestra PHI promedio
-			ui.labelPHI->hide();
 		}
+		else
+			if (imagenCargada.valIndPHI == true) {		//si el valor individual de PHI está activado = true
+				// Para PHI sin promedio:
+				PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
+				// Mostrtamos el valor promedio de PHI arrojado por la fórmula
+				ui.labelPHI->setText("Val Indv");
+				ui.labelPHI->show();
+			
+			}
+			else
+				//Si el valor de PHI es manual o lo colocamos manual
+				//if (imagenCargada.valManualPHI == true)
+				{	
+					// Para PHI fijo, sin promedio:
+					PHI = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_32F);
+					//		PHI = 0.0;
+					QString textoPHI = ui.lineEditPHI->text();
+					PHI = textoPHI.toFloat();
+
+					// Se desactiva el label que muestra PHI promedio
+					ui.labelPHI->hide();
+				}
 		
 		// *********************************** FIN CALCULO DE TITA Y PHI  *******************************//
 		// **********************************************************************************************//
@@ -1094,6 +921,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//IMAGEN_MODIFICADA = ((1 - TITA).*FFT_L_Shift) + (TITA).*(PHI.* (FFT_a_Shift)+((1 - PHI).*FFT_b_Shift));
 
 		// *** SE DIVIDEN LAS OPERACIONES PARA TRABAJAR CON LA PARTE REAL Y LA IMAGINARIA DE LOS NUMEROS COMPLEJOS
+
 		// *** ((1 - TITA).*FFT_L_Shift) ---------------------------------------- A
 		Mat complexLSplit_temp[2];
 		complexLSplit_temp[0] = imagenCargada.complexLSplit[0];
@@ -1133,9 +961,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		cv::add(titaPorD[1], complexLSplit_temp[1], sumaAmasE[1]);
 
 		// **** EXPERIMENTO **** //
-		
-	//	cv::add(imagenCargada.complexLSplit[0], sumaAmasE[0], sumaAmasE[0]);
-	//	cv::add(imagenCargada.complexLSplit[1], sumaAmasE[1], sumaAmasE[1]);
+		// Considerando el valor de L que se indica en el slider de Luminosidad, para agregar o quitar un porcentaje de L
+		// Se afecta la matriz resultante de A + E
 		cv::add(imagenCargada.complexLmodSplit[0], sumaAmasE[0], sumaAmasE[0]);
 		cv::add(imagenCargada.complexLmodSplit[1], sumaAmasE[1], sumaAmasE[1]);
 
@@ -1164,16 +991,16 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	// ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE 0 A 255 PARA L a b ********** //
 
-																 /*
-																 invDFTFinal.convertTo(imagenFinal, CV_8UC1);
-																 Mat matrizLCerosCeros[3], imagenLabBGR_final;
-																 matrizLCerosCeros[0] = imagenFinal;
-																 matrizLCerosCeros[1] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;	// 128 es blanco para el rango de 0 a 255
-																 matrizLCerosCeros[2] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;
-																 Mat imagenLabBGR(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC3);						// U porque va de 0 a 255
-																 merge(matrizLCerosCeros, 3, imagenLabBGR);
-																 cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CIELab a BGR 0 255
-																 */
+	/*
+		invDFTFinal.convertTo(imagenFinal, CV_8UC1);	//CV_8UC1 para los rangos 0 255
+		Mat matrizLCerosCeros[3], imagenLabBGR_final;
+		matrizLCerosCeros[0] = imagenFinal;
+		matrizLCerosCeros[1] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;	// 128 es blanco para el rango de 0 a 255
+		matrizLCerosCeros[2] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;
+		Mat imagenLabBGR(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC3);						// U porque va de 0 a 255
+		merge(matrizLCerosCeros, 3, imagenLabBGR);
+		cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CIELab a BGR 0 255
+	*/
 
 	// ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE: L 0 a 100 y a, b de -127 a 127) ********** // 
 
@@ -1187,12 +1014,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		Mat imagenLabBGR(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_32FC3);
 		cv::merge(matrizLCerosCeros, 3, imagenLabBGR);
 		cv::cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);					// Conversion de CIELab a BGR
-		imagenLabBGR_final.convertTo(imagenLabBGR_final, CV_8U, 255.0);			//imagenLabBGR_final = imagenLabBGR_final * 255;
+		imagenLabBGR_final.convertTo(imagenLabBGR_final, CV_8U, 255.0);				//imagenLabBGR_final = imagenLabBGR_final * 255;
 
 	// ***************************************** FIN CIELAB2BGR *****************************************//
-
-//		namedWindow("L FINAL PROCESO", CV_WINDOW_AUTOSIZE);
-//		imshow("L FINAL PROCESO", imagenLabBGR_final);
 
 		// Si estamos procesando la imagen ORIGINAL para guardarla:
 		if (imagenCargada.guardandoImagen == true)
@@ -1204,20 +1028,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 	}
 
 	
-/*
-	// const &mat
-	QPixmap mat_to_qimage_cpy(Mat mat,
-		QImage::Format format)
-	{
-	//	return QImage(mat.data, mat.cols, mat.rows,
-	//		mat.step, format).copy();
-		static QImage QI = QImage(mat.data, mat.cols, mat.rows,
-			mat.step, format).copy();
-		QPixmap pixmap = QPixmap::fromImage(QI);
-		return pixmap;    // 0 es default options  // Qt::AutoColor
-	}
-*/
-
 	// ************************************************************** //
 	// **** FUNCIONES PARA APLICAR SOBRE LA IMAGEN CARGADA **** //
 
@@ -1229,6 +1039,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//dirEntrada = direccion.toUtf8().constData();	// dirEntrada es static
 	}
 
+
 	// Se transforma la imagen de entrada (cv::Mat) a QPixmap
 	// y se despliega en el Qlabel
 	// bool = true es que se va a desplegar un label diferente, a color
@@ -1237,11 +1048,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		int matFilas = matrizImagen.rows;
 		int matColumnas = matrizImagen.cols;
 		
-		//int matFilas = imagenCargada.imagen.rows;
-		//int matColumnas = imagenCargada.imagen.cols;
-
 		// Transformar de BGR a RGB y a QPixmap
-		Mat imagenLabBGRtoRGB(matFilas, matColumnas, CV_32FC3);			// CV_32FC3   //CV_8UC3
+		Mat imagenLabBGRtoRGB(matFilas, matColumnas, CV_32FC3);				// CV_32FC3   //CV_8UC3
 		cv::cvtColor(matrizImagen, imagenLabBGRtoRGB, CV_BGR2RGB);			// Conversion de BGR a RGB
 
 		int al = ui.label_pic->width();
@@ -1250,7 +1058,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 //		cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2RGB);				// Conversion de CIELab a BGR
 //		imagenLabBGR_final.convertTo(imagenLabBGR_final, CV_32FC3);			//imagenLabBGR_final = imagenLabBGR_final * 255;
 
-		//QImage() //(unsigned char*)
 		QPixmap pixMapFinal(QPixmap::fromImage(QImage((uchar*)imagenLabBGRtoRGB.data,
 			imagenLabBGRtoRGB.cols,
 			imagenLabBGRtoRGB.rows,
@@ -1264,6 +1071,8 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
+	// Mientras se mantenga el botón presionado se muestra la imagen a color
 	void QtGuiApplication3::mostrarOriginal() {
 
 		// Si la imagen no está en un QPixmap se debe de hacer una función como:
@@ -1284,64 +1093,30 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 
 	}
 
+
+	// Cuando se suelte el botón presionado se oculta la imagen a color
 	void QtGuiApplication3::ocultarOriginal() {
 	
 		ui.label_pic_color->hide();
 
 	}
 
-	// Para que el algoritmo fluya en tiempo real se disminuye la calidad de la imagen
-	// esta imagen NO es la que se almacena como resultado final al GUARDAR
+
+	// Para que el algoritmo fluya en tiempo real se disminuye la resolución de la imagen.
+	// Si el usuario lo indica, esta imagen se almacena como resultado final al GUARDAR
 	void QtGuiApplication3::resizeImagen(int valor) {
 		
-	/*	Mat image = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
-		Mat dst(100, 100, CV_8U);
-		//dst.convertTo(imagenCargada.imagen, CV_8U);
-		cv::resize(image, dst, cv::Size(100, 100));
-		//cv::resize(image, imagenCargada.imagenResized, cv::Size(100, 100), 0, 0, INTER_LINEAR);
-		//imagenCargada.imagenResized = dst.clone();
-*/
-
-		//Mat imagenRESIZED = imread(imagenCargada.nombreArchivo, IMREAD_COLOR);
-		//Mat imagenRESIZED (ui.label_pic_color->width(), ui.label_pic_color->height(), CV_32F);
-		//cv::resize(imagenCargada.imagen, imagenRESIZED, imagenRESIZED.size(),0,0, INTER_LINEAR);
-
-		//imagenRESIZED.convertTo(imagenCargada.imagenResized, CV_32F);
-		//imagenRESIZED.copyTo(imagenCargada.imagenResized) ;
-
-
-		//imagenCargada.fileName;
-		//QPixmap pixResize(imagenCargada.fileName);
 		QImage pixResize(imagenCargada.fileName);
 
 		int al = ui.label_pic_color->width();
 		int an = ui.label_pic_color->height();
-
-		//int porcentajeResizeInicial = valor;
-
+		
 		int altoResize = (valor * imagenCargada.altoOriginal) / 100;
 		int anchoResize = (valor * imagenCargada.anchoOriginal) / 100;
-
-		//Si el label de la imagen es menor al alto o ancho original
-		//if (al < imagenCargada.altoOriginal | an < imagenCargada.anchoOriginal) {
-
-		//	if(imagenCargada.altoOriginal >= al)
-		//		porcentajeResizeInicial = al * 100 / imagenCargada.altoOriginal;
-		//	else
-		//		porcentajeResizeInicial = an * 100 / imagenCargada.anchoOriginal;
-
-		//}
-		
-		//En caso de ser una imagen menor en alto y ancho, se deja en su resolución original 100%
 
 		// Se escala la imagen a las dimsensiones que se desean (% indicado en el valor)
 		pixResize = pixResize.scaled(altoResize, anchoResize, Qt::KeepAspectRatio);
 
-		///ui.horizontalSliderResolucion->setValue(valor);
-		//ui.lineEditResolucion->setText(QVariant(valor).toString());
-		
-		//pixResize.scaled(al, an, Qt::KeepAspectRatio);
-		
 		// Guardamos un QImage para mostrarla cuando se llame a mostrarOriginal() y no sea lento
 		imagenCargada.QImageImagenResized = pixResize;
 
@@ -1349,78 +1124,51 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//ui.label_pic->repaint();
 
 		// OJO, Qt lee en RGB y OpenCV en BGR --- Cambiar RGB a BGR
-		//imagenCargada.imagenResized = ;
 
 		pixResize = pixResize.convertToFormat(QImage::Format_RGB888);// .rgbSwapped();
 
-//		imagenCargada.imagenResized = Mat(pixResize.height(),
-//									pixResize.width(),
-//									CV_8UC(3), 
-//									pixResize.bits(), 
-//									pixResize.bytesPerLine()
-//									);
-
 		Mat view(pixResize.height(), pixResize.width(), CV_8UC3, (void *)pixResize.constBits(), pixResize.bytesPerLine());
+		
 		cv::cvtColor(view, imagenCargada.imagenResized, COLOR_RGB2BGR);
-		
-
-		
+				
 		if (imagenCargada.ejecutaAlgoritmo == true & imagenCargada.cargandoImagen == false) {  
 			algoritmoParteUno();
 			algoritmoParteDos();
 		}
 
-		if (imagenCargada.cargandoImagen == true) { //imagenCargada.ejecutaAlgoritmo == false & 
+		if (imagenCargada.cargandoImagen == true) {
 			ui.horizontalSliderResolucion->setValue(valor);
-			ui.label_pic->setPixmap(QPixmap::fromImage(pixResize).scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
-			//ui.label_pic->setPixmap(QPixmap::fromImage(imagenCargada.QImageImagenResized).scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
+			ui.label_pic->setPixmap(QPixmap::fromImage(pixResize).scaled(al, an, Qt::KeepAspectRatio));
+			//ui.label_pic->setPixmap(QPixmap::fromImage(imagenCargada.QImageImagenResized).scaled(al, an, Qt::KeepAspectRatio));
 			ui.label_pic->repaint();
 		}
+
 		///ui.horizontalSliderResolucion->setValue(valor);
 
-
-	/*	//**********************************************
-
-
-
-
-		int matFilas = imagenCargada.imagenResized.rows;
-		int matColumnas = imagenCargada.imagenResized.cols;
-
-		//int matFilas = imagenCargada.imagen.rows;
-		//int matColumnas = imagenCargada.imagen.cols;
-
-		// Transformar de BGR a RGB y a QPixmap
-		Mat imagenLabBGRtoRGB(matFilas, matColumnas, CV_32FC3);			// CV_32FC3   //CV_8UC3
-		cvtColor(imagenCargada.imagenResized, imagenLabBGRtoRGB, CV_BGR2RGB);			// Conversion de BGR a RGB
-
-		int al = ui.label_pic->width();
-		int an = ui.label_pic->height();
-
-		//		cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2RGB);				// Conversion de CIELab a BGR
-		//		imagenLabBGR_final.convertTo(imagenLabBGR_final, CV_32FC3);			//imagenLabBGR_final = imagenLabBGR_final * 255;
-
-		
-		ui.label_pic->setPixmap(pixMapFinal.scaled(al, an, Qt::KeepAspectRatio)); // KeepAspectRatio KeepAspectRatioByExpanding
-		ui.label_pic->repaint();
-		*/
-
 	}
+
 
 	// Cambiamos el porcentaje de resize indicado en el lineEdit según el valor del Slider de Resolución
 	void QtGuiApplication3::cambiarLabelResolucion() {
 
 		int valor = ui.horizontalSliderResolucion->value();
 		ui.lineEditResolucion->setText(QVariant(valor).toString());
-		
+
+		// La resolución modificada no puede ser menor a 0
+		if (valor<=0){
+			ui.lineEditResolucion->setText(QVariant(1).toString());
+			ui.horizontalSliderResolucion->setValue(1);
+		}
+
 		// sino estamos en la primera carga de una imagen, que queremos a color
-		if (imagenCargada.ejecutaAlgoritmo == true) {  // 
+		if(valor>0 & imagenCargada.ejecutaAlgoritmo == true) { 
 			//algoritmoParteUno();
 			//algoritmoParteDos();
 			resizeImagen(valor);
 		}
 
 	}
+
 
 	// Cambiamos el porcentaje de resize indicado en el Slider según el valor del lineEdit
 	void QtGuiApplication3::cambiarSliderResolucion() {
