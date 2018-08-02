@@ -701,23 +701,16 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		tempBlue = imagenBGR[0];
 		tempGreen = imagenBGR[1];
 		tempRed = imagenBGR[2];
-		tempBlue.convertTo(tempBlue, CV_32F);	//, 0.114	// 0 a 255		//CV_32F, 1.0 / 255);	//LLEVAMOS TODO A ESCALA DE 0 a 1
-		tempGreen.convertTo(tempGreen, CV_32F);	//, 0.587	// 0 a 255  	
-		tempRed.convertTo(tempRed, CV_32F);	//, 0.299		// 0 a 255
-
+		tempBlue.convertTo(tempBlue, CV_32F);		// 0 a 255		//CV_32F, 1.0 / 255);	//LLEVAMOS TODO A ESCALA DE 0 a 1
+		tempGreen.convertTo(tempGreen, CV_32F);		// 0 a 255
+		tempRed.convertTo(tempRed, CV_32F);			// 0 a 255
+		
 		Mat complexBlue, complexGreen, complexRed;    //Complex plane to contain the DFT coefficients {[0]-Real,[1]-Img}
 
 		dft(tempBlue, complexBlue, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
 		dft(tempGreen, complexGreen, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
 		dft(tempRed, complexRed, DFT_COMPLEX_OUTPUT);  // Applying DFT dft(dftInput1, dftImage1, DFT_COMPLEX_OUTPUT); 
-		
-		//EXPERIMENTO:
-		// PROBANDO: Promedio de RGB para el cálculo de TITA:
-		Mat tempProm;
-		//tempProm = (tempBlue + tempGreen + tempRed)/3;
-		tempProm = (tempBlue*0.1140) + (tempGreen*0.5870) + (tempRed*0.2990);
-		Mat complexPromRGB;
-		dft(tempProm, complexPromRGB, DFT_COMPLEX_OUTPUT);
+
 
 	// ****************************   CIELAB   ********************************//
 
@@ -793,13 +786,6 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		// EXPERIMENTO:
 		// Complejo de L modificada
 		split(complexLmodificado, imagenCargada.complexLmodSplit);
-
-		// EXPERIMENTO:
-		// Magnitud del promedio (R+G+B)/3
-		Mat complexPromSplit[2];
-		split(complexPromRGB, complexPromSplit);
-		magnitude(complexPromSplit[0], complexPromSplit[1], imagenCargada.magnitudProm); //magnitudProm |PROM^| es sqrt(R^2 +I^2)
-
 		
 		// ***************** NOTA:
 		//					LAS MAGNITUDES ESTAN ALMACENADAS EN LAS VARIABLES
@@ -824,20 +810,11 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		if (imagenCargada.valPromTITA == true) {		
 
 			// Para TITA promedio:
-				/*TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
+				TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
 					imagenCargada.magnitudRed - imagenCargada.magnitudL) /
 					(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed);
-				*/
-			//EXPERIMENTO:
-			TITA = 1 - (imagenCargada.magnitudL /
-				((imagenCargada.magnitudBlue*0.114) + (imagenCargada.magnitudGreen*0.587) + (imagenCargada.magnitudRed*0.299)));
-
-			//TITA = 1 - (imagenCargada.magnitudL /
-			//	((imagenCargada.magnitudBlue) + (imagenCargada.magnitudGreen) + (imagenCargada.magnitudRed)));
-			//TITA = 1 - ((imagenCargada.magnitudL) /
-				//		((imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed)/3));
-				//TITA = 1 - (imagenCargada.magnitudL) / (imagenCargada.magnitudProm);
-				//	TITA = 1.0;
+		
+			//	TITA = 1.0;
 
 			int m, n;
 			m = imagenCargada.imagen.rows;					// Filas = alto
@@ -861,15 +838,9 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 			//si el valor individual de TITA está activado = true = valores individuales
 			if (imagenCargada.valIndTITA == true) {		
 				// Para TITAs individuales:
-				/*TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
+				TITA = (imagenCargada.magnitudBlue + imagenCargada.magnitudGreen +
 					imagenCargada.magnitudRed - imagenCargada.magnitudL) /
 					(imagenCargada.magnitudBlue + imagenCargada.magnitudGreen + imagenCargada.magnitudRed);
-					*/
-				//EXPERIMENTO:
-				TITA = 1 - ((imagenCargada.magnitudL) /
-					((imagenCargada.magnitudBlue*0.114 + imagenCargada.magnitudGreen*0.587 + imagenCargada.magnitudRed*0.299)));
-
-				//TITA = 1 - (imagenCargada.magnitudL) / (imagenCargada.magnitudProm);
 
 				// Mostrtamos el valor promedio de TITA arrojado por la fórmula
 				ui.labelTITA->setText("Val Indv");
@@ -898,14 +869,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		//si el valor promedio de PHI está activo = true
 		if (imagenCargada.valPromPHI == true) {
 
-			//PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
-
-			//EXPERIMENTO:
-			//PHI = 1- (imagenCargada.magnitudb / imagenCargada.magnituda);
-			//PHI = 1-(imagenCargada.magnituda + imagenCargada.magnitudb) / imagenCargada.magnituda;
-			PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda + imagenCargada.magnitudb);
-			//PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
-			//PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda);
+			PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
 			//	cout << "\nMAGNITUD PHI:" << PHI; //sum(magnitudb).val[0];
 			// Para PHI promedio>:
 			int mm, nn;
@@ -928,11 +892,7 @@ QtGuiApplication3::QtGuiApplication3(QWidget *parent)
 		else
 			if (imagenCargada.valIndPHI == true) {		//si el valor individual de PHI está activado = true
 				// Para PHI sin promedio:
-				//PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
-
-				//EXPERIMENTO:
-				PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda + imagenCargada.magnitudb);
-
+				PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
 				// Mostrtamos el valor promedio de PHI arrojado por la fórmula
 				ui.labelPHI->setText("Val Indv");
 				ui.labelPHI->show();

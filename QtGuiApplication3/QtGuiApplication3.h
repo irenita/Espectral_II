@@ -71,7 +71,6 @@ static struct ImagenCargada {
 	Mat magnitudBlue;
 	Mat magnitudGreen;
 	Mat magnitudRed;
-	Mat magnitudProm;			//Para almacenar el promedio que se utiliza en el cálculo de TITA PROM
 	Mat magnitudL;
 	Mat magnituda;
 	Mat magnitudb;
