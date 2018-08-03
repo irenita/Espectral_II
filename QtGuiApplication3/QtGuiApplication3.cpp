@@ -903,7 +903,7 @@ void QtGuiApplication3::algoritmoParteDos() {
 		//EXPERIMENTO:
 		//PHI = 1- (imagenCargada.magnitudb / imagenCargada.magnituda);
 		//PHI = 1-(imagenCargada.magnituda + imagenCargada.magnitudb) / imagenCargada.magnituda;
-		PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda + imagenCargada.magnitudb);
+		PHI = (imagenCargada.magnitudb - imagenCargada.magnituda) / (imagenCargada.magnituda + imagenCargada.magnitudb);
 		//PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
 		//PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda);
 		//	cout << "\nMAGNITUD PHI:" << PHI; //sum(magnitudb).val[0];
@@ -931,7 +931,7 @@ void QtGuiApplication3::algoritmoParteDos() {
 													//PHI = imagenCargada.magnituda / (imagenCargada.magnituda + imagenCargada.magnitudb);
 
 													//EXPERIMENTO:
-			PHI = (imagenCargada.magnituda - imagenCargada.magnitudb) / (imagenCargada.magnituda + imagenCargada.magnitudb);
+			PHI = (imagenCargada.magnitudb - imagenCargada.magnituda) / (imagenCargada.magnituda + imagenCargada.magnitudb);
 
 			// Mostrtamos el valor promedio de PHI arrojado por la fórmula
 			ui.labelPHI->setText("Val Indv");
