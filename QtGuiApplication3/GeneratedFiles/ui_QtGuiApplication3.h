@@ -551,7 +551,7 @@ public:
 
     void retranslateUi(QMainWindow *QtGuiApplication3Class)
     {
-        QtGuiApplication3Class->setWindowTitle(QApplication::translate("QtGuiApplication3Class", "Decoloraci\303\263n Espectral", nullptr));
+        QtGuiApplication3Class->setWindowTitle(QApplication::translate("QtGuiApplication3Class", "Decoloraci\303\263n Espectral II", nullptr));
         pushButtonSalir->setText(QApplication::translate("QtGuiApplication3Class", "SALIR", nullptr));
         pushButtonAbrir->setText(QApplication::translate("QtGuiApplication3Class", "Abrir Imagen", nullptr));
         lineEditTITA->setText(QApplication::translate("QtGuiApplication3Class", "0.0", nullptr));

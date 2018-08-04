@@ -237,7 +237,7 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Decoloración Espectral</string>
+   <string>Decoloración Espectral II</string>
   </property>
   <property name="windowIcon">
    <iconset resource="QtGuiApplication3.qrc">
