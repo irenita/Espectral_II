@@ -1018,31 +1018,31 @@ void QtGuiApplication3::algoritmoParteDos() {
 	cv::merge(sumaAmasE, 2, mergeAE);
 	cv::idft(mergeAE, invDFTFinal, DFT_SCALE | DFT_REAL_OUTPUT); // Applying IDFT
 
-																 // **********************************************************************************************//
-																 // *****************************  FIN IFFT DE LA IMAGEN MODIFICADA  *****************************//
+// **********************************************************************************************//
+// *****************************  FIN IFFT DE LA IMAGEN MODIFICADA  *****************************//
 
 
-																 // ***************************************** CIELAB2BGR *****************************************//
-																 // * EL RESULTADO DE LA CONVERSION DE CIELAB2BGR SE ALMACENA EN LA VARIABLE: imagenLabBGR_final *//
+// ***************************************** CIELAB2BGR *****************************************//
+// * EL RESULTADO DE LA CONVERSION DE CIELAB2BGR SE ALMACENA EN LA VARIABLE: imagenLabBGR_final *//
 
-																 // imagenFinal es de un canal, representado en el espacio Lab
-																 // ahora, ese canal, lo vamos a llevar al especio BGR
-																 // el canal L sera el indicado en imagenFinal, el canal a y b seran ceros
+// imagenFinal es de un canal, representado en el espacio Lab
+// ahora, ese canal, lo vamos a llevar al especio BGR
+// el canal L sera el indicado en imagenFinal, el canal a y b seran ceros
 
-																 // ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE 0 A 255 PARA L a b ********** //
+// ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE 0 A 255 PARA L a b ********** //
 
-																 /*
-																 invDFTFinal.convertTo(imagenFinal, CV_8UC1);	//CV_8UC1 para los rangos 0 255
-																 Mat matrizLCerosCeros[3], imagenLabBGR_final;
-																 matrizLCerosCeros[0] = imagenFinal;
-																 matrizLCerosCeros[1] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;	// 128 es blanco para el rango de 0 a 255
-																 matrizLCerosCeros[2] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;
-																 Mat imagenLabBGR(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC3);						// U porque va de 0 a 255
-																 merge(matrizLCerosCeros, 3, imagenLabBGR);
-																 cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CIELab a BGR 0 255
-																 */
+/*
+invDFTFinal.convertTo(imagenFinal, CV_8UC1);	//CV_8UC1 para los rangos 0 255
+Mat matrizLCerosCeros[3], imagenLabBGR_final;
+matrizLCerosCeros[0] = imagenFinal;
+matrizLCerosCeros[1] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;	// 128 es blanco para el rango de 0 a 255
+matrizLCerosCeros[2] = Mat::ones(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC1)*128;
+Mat imagenLabBGR(imagenCargada.imagen.rows, imagenCargada.imagen.cols, CV_8UC3);						// U porque va de 0 a 255
+merge(matrizLCerosCeros, 3, imagenLabBGR);
+cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CIELab a BGR 0 255
+*/
 
-																 // ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE: L 0 a 100 y a, b de -127 a 127) ********** // 
+// ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE: L 0 a 100 y a, b de -127 a 127) ********** // 
 
 	invDFTFinal.convertTo(imagenFinal, CV_32FC1);	//32FC1 para los rangos 0 100 y -127 127
 	Mat matrizLCerosCeros[3], imagenLabBGR_final;
