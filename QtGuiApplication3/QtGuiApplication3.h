@@ -74,6 +74,7 @@ static struct ImagenCargada {
 	Mat magnitudL;
 	Mat magnituda;
 	Mat magnitudb;
+	Mat magnitudProm;
 	Mat complexLSplit[2];
 	Mat complexaSplit[2];
 	Mat complexbSplit[2];
