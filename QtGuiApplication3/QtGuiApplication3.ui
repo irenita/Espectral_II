@@ -1238,7 +1238,7 @@
      <string notr="true">background-color: rgb(255, 174, 176);</string>
     </property>
     <property name="text">
-     <string>Reestablecer valores</string>
+     <string>Restablecer valores</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonGuardar">

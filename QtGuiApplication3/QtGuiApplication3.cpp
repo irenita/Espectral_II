@@ -1043,8 +1043,8 @@ cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CI
 */
 
 // ********** LA SIGUIENTE TRANSFORMACION SE LLEVA EN EL RANGO DE: L 0 a 100 y a, b de -127 a 127) ********** // 
-
-	invDFTFinal.convertTo(imagenFinal, CV_32FC1);	//32FC1 para los rangos 0 100 y -127 127
+	
+	invDFTFinal.convertTo(imagenFinal, CV_32FC1);	//32FC1 para los rangos 0 100 y -127 127 //Se cambia el tipo de dato
 	Mat matrizLCerosCeros[3], imagenLabBGR_final;
 	imagenFinal = imagenFinal * 100 / 255;			// lo llevamos a un rango de 0 a 100 //Si el algoritmo lo trabajamos de 0 a 255, lo llevamos de 0 a 100
 													//	imagenFinal = imagenFinal * 100;				// Como llevamos el algoritmo con escalas de 0 a 1, ahora la llevamos de 0 a 100
@@ -1072,7 +1072,7 @@ cvtColor(imagenLabBGR, imagenLabBGR_final, CV_Lab2BGR);						// Conversion de CI
 // **** FUNCIONES PARA APLICAR SOBRE LA IMAGEN CARGADA **** //
 
 // Transformamos la dirección de la imagen, de QString a string
-// para que se pueda tranajar con Opencv
+// para que se pueda trabajar con Opencv
 void QtGuiApplication3::direccionEntrada(QString direccion)
 {
 	imagenCargada.nombreArchivo = direccion.toUtf8().constData();

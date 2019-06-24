@@ -562,7 +562,7 @@ public:
         label_5->setText(QApplication::translate("QtGuiApplication3Class", "Valores autom\303\241ticos:", nullptr));
         pushButtonValProm->setText(QApplication::translate("QtGuiApplication3Class", "Valores promedio", nullptr));
         pushButtonValInd->setText(QApplication::translate("QtGuiApplication3Class", "Valores individuales", nullptr));
-        pushButtonReestVal->setText(QApplication::translate("QtGuiApplication3Class", "Reestablecer valores", nullptr));
+        pushButtonReestVal->setText(QApplication::translate("QtGuiApplication3Class", "Restablecer valores", nullptr));
         pushButtonGuardar->setText(QApplication::translate("QtGuiApplication3Class", "Guardar Imagen", nullptr));
         label_6->setText(QApplication::translate("QtGuiApplication3Class", "Valores manuales:", nullptr));
         labelTITA->setText(QString());
