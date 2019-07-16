@@ -594,7 +594,7 @@
      </font>
     </property>
     <property name="text">
-     <string>TITA:</string>
+     <string>THETA:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
